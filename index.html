@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>4次曲面 z = x⁴ + y⁴ - 2(x-y)²</title>
+  <!-- MathJax v2（Plotlyと最も相性が良いバージョン）の読み込み -->
+  <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  </script>
+  <!-- Plotly.js の読み込み -->
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <style>
+    body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; height: 100vh; }
+    #plot { width: 90vw; height: 90vh; }
+  </style>
+</head>
+<body>
+
+<div id="plot"></div>
+
+<script>
+  const size = 80;
+  const x = [], y = [], z = [];
+  const range = 2;
+
+  for (let i = 0; i < size; i++) {
+    x[i] = -range + (2 * range * i) / (size - 1);
+    y[i] = -range + (2 * range * i) / (size - 1);
+  }
+
+  for (let i = 0; i < size; i++) {
+    z[i] = [];
+    for (let j = 0; j < size; j++) {
+      const xi = x[j];
+      const yj = y[i];
+      z[i][j] = Math.pow(xi, 4) + Math.pow(yj, 4) - 2 * Math.pow(xi - yj, 2);
+    }
+  }
+
+  const data = [{
+    z: z,
+    x: x,
+    y: y,
+    type: 'surface',
+    colorscale: 'Viridis'
+  }];
+
+  const layout = {
+    // 日本語を \text{} の中に入れることで、日本語＋LaTeX数式を同時に綺麗に描画できます
+    title: { text: '$\\text{曲面 } z = x^4 + y^4 - 2(x - y)^2$' },
+    autosize: true,
+    scene: {
+      // 3D軸名は HTML タグ <i> で斜体表記にするとエラーにならず上品に仕上がります
+      xaxis: { title: { text: '<i>x</i>' } },
+      yaxis: { title: { text: '<i>y</i>' } },
+      zaxis: { title: { text: '<i>z</i>' } }
+    }
+  };
+
+  Plotly.newPlot('plot', data, layout);
+</script>
+
+</body>
+</html>
